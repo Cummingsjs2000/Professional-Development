@@ -1,0 +1,9 @@
+{
+  "name": "responsible-ai-pd-course",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Standalone asynchronous PD course site with participant progress, reflections, scenario submissions, and discussion, backed by Netlify Blobs.",
+  "dependencies": {
+    "@netlify/blobs": "^10.0.0"
+  }
+}

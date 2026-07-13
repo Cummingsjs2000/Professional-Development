@@ -1,0 +1,8 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+# No build command needed — this is a plain static HTML site.
+# Netlify will still run `npm install` automatically because a
+# package.json is present, which is what pulls in @netlify/blobs
+# for the function below.
