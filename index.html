@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Responsible AI Integration — Educator PD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta name="color-scheme" content="light dark">
+<style>
+  :root{
+    color-scheme: light dark;
+    --ink:#1B2430;
+    --paper:#F7F5F0;
+    --paper-raised:#FFFFFF;
+    --teal:#2B6E68;
+    --teal-dark:#1E4F4B;
+    --mustard:#C98A2C;
+    --line:#DDD8CC;
+    --muted:#5B6270;
+    --danger:#B0453D;
+    --danger-bg:#FBEDEB;
+    --danger-border:#EBC9C4;
+    --overlay-bg:#1B2430;
+    --overlay-text:#FFFFFF;
+    --radius:4px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --ink:#ECEAE3;
+      --paper:#14181D;
+      --paper-raised:#1E252C;
+      --teal:#4C9C93;
+      --teal-dark:#7BC3BA;
+      --mustard:#E0A94A;
+      --line:#333B44;
+      --muted:#A8AFB9;
+      --danger:#F0958A;
+      --danger-bg:#3A2420;
+      --danger-border:#5C332C;
+      --overlay-bg:#0E1114;
+      --overlay-text:#F2F0EA;
+    }
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'Inter',sans-serif;line-height:1.55;}
+  h1,h2,h3,h4{font-family:'Roboto Slab',serif;font-weight:700;margin:0 0 .5em;color:var(--ink);}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:var(--teal-dark);}
+  button{font-family:'Inter',sans-serif;cursor:pointer;}
+  .btn{background:var(--teal);color:#fff;border:none;padding:.65em 1.3em;border-radius:var(--radius);font-weight:600;font-size:.95em;transition:background .15s;}
+  .btn:hover{background:var(--teal-dark);}
+  .btn.secondary{background:transparent;color:var(--teal-dark);border:1.5px solid var(--teal);}
+  .btn.secondary:hover{background:var(--teal);color:#fff;}
+  .btn.small{padding:.4em .9em;font-size:.85em;}
+  .btn:disabled{opacity:.45;cursor:not-allowed;}
+  input[type=text],input[type=password],textarea{
+    width:100%;font-family:'Inter',sans-serif;font-size:.95em;padding:.6em .7em;
+    border:1.5px solid var(--line);border-radius:var(--radius);background:var(--paper-raised);color:var(--ink);
+  }
+  textarea{resize:vertical;min-height:90px;}
+  input:focus,textarea:focus,button:focus-visible{outline:2px solid var(--mustard);outline-offset:1px;}
+
+  /* App shell */
+  #app{max-width:1100px;margin:0 auto;padding:0 20px 60px;}
+  header.top{display:flex;align-items:center;justify-content:space-between;padding:22px 0;border-bottom:2px solid var(--ink);margin-bottom:28px;}
+  header.top .brand{display:flex;align-items:center;gap:12px;}
+  header.top .brand .mark{width:34px;height:34px;background:var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Roboto Slab',serif;font-weight:700;}
+  header.top h1{font-size:1.15em;margin:0;}
+  header.top .sub{font-size:.78em;color:var(--muted);}
+  header.top .pid-badge{font-family:'JetBrains Mono',monospace;font-size:.8em;background:var(--overlay-bg);color:var(--overlay-text);padding:.35em .7em;border-radius:var(--radius);}
+
+  .layout{display:grid;grid-template-columns:230px 1fr;gap:32px;}
+  @media (max-width:760px){.layout{grid-template-columns:1fr;}}
+
+  nav.ledger{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:6px;height:fit-content;}
+  nav.ledger button.navitem{
+    display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;
+    padding:.7em .6em;border-radius:var(--radius);font-size:.88em;color:var(--ink);border-bottom:1px solid var(--paper);
+  }
+  nav.ledger button.navitem:hover{background:var(--paper);}
+  nav.ledger button.navitem.active{background:var(--teal);color:#fff;}
+  nav.ledger .tick{width:16px;height:16px;border-radius:3px;border:1.5px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;font-size:.7em;}
+  nav.ledger button.navitem.active .tick{border-color:#fff;}
+  nav.ledger .tick.done{background:var(--mustard);border-color:var(--mustard);color:#fff;}
+
+  section.panel{background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius);padding:30px 34px;}
+  .eyebrow{font-family:'JetBrains Mono',monospace;font-size:.72em;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-dark);margin-bottom:.4em;}
+  .kv{display:flex;gap:8px;flex-wrap:wrap;margin:1em 0;}
+  .kv span{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:.3em .7em;font-size:.8em;color:var(--muted);}
+  .card{border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin:16px 0;background:var(--paper);}
+  .card h4{margin-bottom:.3em;font-size:1em;}
+  .card .label{font-size:.75em;text-transform:uppercase;letter-spacing:.05em;color:var(--teal-dark);font-weight:600;margin-bottom:.4em;}
+  ul.plain{padding-left:1.2em;margin:.4em 0;}
+  ul.plain li{margin-bottom:.3em;}
+  .embed-wrap{border:1.5px dashed var(--line);border-radius:var(--radius);padding:14px;background:var(--paper-raised);margin-top:10px;}
+  .embed-wrap iframe{width:100%;min-height:500px;border:none;}
+  .config-note{font-size:.78em;color:var(--danger);background:var(--danger-bg);border:1px solid var(--danger-border);padding:.6em .8em;border-radius:var(--radius);margin-top:8px;}
+  .divider{height:1px;background:var(--line);margin:28px 0;}
+  .actions-row{display:flex;gap:10px;align-items:center;margin-top:14px;flex-wrap:wrap;}
+  .status-pill{font-size:.75em;padding:.25em .7em;border-radius:20px;background:var(--paper);border:1px solid var(--line);color:var(--muted);}
+  .status-pill.done{background:var(--teal);color:#fff;border-color:var(--teal);}
+  .discussion-post{border-bottom:1px solid var(--line);padding:10px 0;}
+  .discussion-post .meta{font-size:.72em;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-bottom:2px;}
+  .center{text-align:center;}
+  table.admin{width:100%;border-collapse:collapse;font-size:.85em;}
+  table.admin th,table.admin td{border-bottom:1px solid var(--line);padding:.5em .6em;text-align:left;}
+  table.admin th{font-family:'JetBrains Mono',monospace;font-size:.75em;text-transform:uppercase;color:var(--muted);}
+  .cert{border:3px double var(--ink);padding:50px 40px;text-align:center;margin-top:20px;}
+  .cert .title{font-family:'Roboto Slab',serif;font-size:1.6em;}
+  .cert .name{font-family:'Roboto Slab',serif;font-size:1.9em;color:var(--teal-dark);margin:.4em 0;}
+  .toast{position:fixed;bottom:20px;right:20px;background:var(--overlay-bg);color:var(--overlay-text);padding:.8em 1.2em;border-radius:var(--radius);font-size:.85em;opacity:0;transform:translateY(10px);transition:.2s;pointer-events:none;}
+  .toast.show{opacity:1;transform:translateY(0);}
+  .landing{max-width:520px;margin:60px auto;text-align:center;}
+  .landing input{margin:10px 0;}
+  .loading{text-align:center;padding:60px 0;color:var(--muted);}
+</style>
+</head>
+<body>
+
+<div id="app"><div class="loading">Loading course…</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================================
+   CONFIGURATION — the researcher edits this block only.
+   =========================================================================
+   - Replace each "PASTE_..._URL_HERE" with the real link.
+   - preSurveyUrl / postSurveyUrl: your Qualtrics survey links (pre/post
+     study surveys only — module reflections and scenario work are
+     captured directly on this site, saved automatically, and viewable
+     in the researcher dashboard).
+   - videoUrl per module: link to that module's welcome video.
+   - adminPassword: a simple gate for the facilitator dashboard. This is
+     NOT strong security — anyone who reads the page source can see it.
+     Treat it as a "keep casual visitors out" latch, not a real credential.
+========================================================================= */
+const CONFIG = {
+  courseTitle: "Responsible AI Integration for K–12 Educators",
+  completionHours: 6,
+  preSurveyUrl: "https://unt.az1.qualtrics.com/jfe/form/SV_3Fc1hJqOXjjAXhs",
+  postSurveyUrl: "https://unt.az1.qualtrics.com/jfe/form/SV_5gQhpmP46InOrCm",
+  adminPassword: "changeme123",
+  modules: [
+    {
+      id: "m1",
+      title: "Module 1 — Foundations of AI in Education",
+      purpose: "Understand generative AI, current classroom uses, benefits, limitations, and responsible implementation.",
+      videoUrl: "PASTE_MODULE1_VIDEO_URL_HERE",
+      keyTopics: ["What is generative AI?", "How AI is being used in K–12", "Benefits and limitations", "Setting the stage for responsible AI"],
+      activity: "Explore one approved AI tool using classroom prompts.",
+      reflectionPrompt: "Describe how your perception of AI changed after completing the module.",
+      artifactLabel: "AI Exploration Submission",
+      artifactInstructions: "Submit your prompts, the AI's responses, your evaluation of them, how you'd apply this in your classroom, and any concerns you have."
+    },
+    {
+      id: "m2",
+      title: "Module 2 — Inclusive Design & Digital Equity",
+      purpose: "Examine inclusive instructional design and equitable AI implementation.",
+      videoUrl: "PASTE_MODULE2_VIDEO_URL_HERE",
+      keyTopics: ["Digital equity", "Accessibility", "Universal Design", "Supporting diverse learners"],
+      activity: "Revise an existing lesson using inclusive AI principles.",
+      reflectionPrompt: "How can AI improve — or reduce — equitable learning opportunities?",
+      artifactLabel: "Revised Lesson Plan Submission",
+      artifactInstructions: "Submit a revised lesson plan with rationale."
+    },
+    {
+      id: "m3",
+      title: "Module 3 — Bias, Justice, and Responsible AI",
+      purpose: "Recognize algorithmic bias and evaluate AI outputs critically.",
+      videoUrl: "PASTE_MODULE3_VIDEO_URL_HERE",
+      keyTopics: ["Algorithmic bias", "Hallucinations", "Fairness", "Transparency", "Justice"],
+      activity: "Analyze an AI-generated classroom scenario for potential bias.",
+      reflectionPrompt: "What responsibilities do educators have when using AI?",
+      artifactLabel: "Bias Analysis Submission",
+      artifactInstructions: "Submit a written bias analysis with recommendations."
+    },
+    {
+      id: "m4",
+      title: "Module 4 — Ethical AI Implementation",
+      purpose: "Develop a practical framework for responsible classroom AI integration.",
+      videoUrl: "PASTE_MODULE4_VIDEO_URL_HERE",
+      keyTopics: ["Privacy", "Copyright", "Academic integrity", "District policy", "Teacher decision making"],
+      activity: "Develop a classroom AI implementation plan.",
+      reflectionPrompt: "How will you implement AI responsibly in your own practice?",
+      artifactLabel: "Implementation Framework Submission",
+      artifactInstructions: "Submit a personal AI implementation framework."
+    }
+  ]
+};
+/* ===================== END CONFIGURATION ===================== */
+
+let state = { pid: null, progress: null, view: "welcome", isAdmin: false };
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+function esc(s){
+  const d = document.createElement('div'); d.textContent = s ?? ""; return d.innerHTML;
+}
+
+async function safeGet(key, shared){
+  try{
+    const res = await fetch(`/.netlify/functions/storage?key=${encodeURIComponent(key)}`);
+    if(!res.ok) return null;
+    const data = await res.json();
+    return (data && data.value !== null && data.value !== undefined) ? data.value : null;
+  }catch(e){ console.error('storage get failed', key, e); return null; }
+}
+async function safeSet(key, value, shared){
+  try{
+    const res = await fetch('/.netlify/functions/storage', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ key, value })
+    });
+    return res.ok ? { key, value } : null;
+  }catch(e){ console.error('storage set failed', key, e); return null; }
+}
+async function safeList(prefix, shared){
+  try{
+    const res = await fetch(`/.netlify/functions/storage?prefix=${encodeURIComponent(prefix)}`);
+    if(!res.ok) return [];
+    const data = await res.json();
+    return data.keys || [];
+  }catch(e){ console.error('storage list failed', prefix, e); return []; }
+}
+
+function defaultProgress(pid, name){
+  const p = { pid, name: name || "", preSurvey:false, postSurvey:false, joinedAt: new Date().toISOString(), modules:{} };
+  CONFIG.modules.forEach(m => p.modules[m.id] = { viewed:false, activityDone:false, submitted:false });
+  return p;
+}
+
+async function loadProgress(pid){
+  const raw = await safeGet('progress:'+pid, true);
+  if(raw){ try{ return JSON.parse(raw); }catch(e){} }
+  return null;
+}
+async function saveProgress(){
+  await safeSet('progress:'+state.pid, JSON.stringify(state.progress), true);
+}
+
+function pctComplete(p){
+  const total = CONFIG.modules.length + 2; // + pre/post survey
+  let done = (p.preSurvey?1:0) + (p.postSurvey?1:0);
+  CONFIG.modules.forEach(m => { if(p.modules[m.id].submitted) done++; });
+  return Math.round(100*done/total);
+}
+
+/* ---------- Routing / render ---------- */
+async function boot(){
+  const savedPid = sessionStorage.getItem('pd_pid');
+  if(savedPid){
+    const p = await loadProgress(savedPid);
+    if(p){ state.pid = savedPid; state.progress = p; render(); return; }
+  }
+  renderLanding();
+}
+
+function renderLanding(){
+  const app = document.getElementById('app');
+  app.innerHTML = `
+    <div class="landing">
+      <div class="eyebrow">Participant Sign-In</div>
+      <h1>${esc(CONFIG.courseTitle)}</h1>
+      <p style="color:var(--muted);white-space:pre-line">Please create a unique 4-character code using:
+• First letter of your mother's first name
+• Last two digits of your birth year
+• First letter of your birthplace
+Example: M87T
+
+Use the same code every time you return — it's how the course finds your saved progress.</p>
+      <input type="text" id="pidInput" class="mono" placeholder="e.g. M87T" autocomplete="off" maxlength="4">
+      <input type="text" id="nameInput" placeholder="Display name for discussion posts (optional)">
+      <p style="font-size:.78em;color:var(--muted);margin-top:2px;">Your name is optional — but if you'd like your certificate of completion to show your name, enter it here.</p>
+      <div style="margin-top:16px;"><button class="btn" id="enterBtn">Enter course</button></div>
+      <p style="margin-top:26px;font-size:.8em;color:var(--muted)">Facilitator? <a href="#" id="adminLink">Open the researcher dashboard</a> instead.</p>
+    </div>`;
+  document.getElementById('enterBtn').onclick = async () => {
+    const pid = document.getElementById('pidInput').value.trim();
+    const name = document.getElementById('nameInput').value.trim();
+    if(!pid){ toast("Enter your participant code first."); return; }
+    let p = await loadProgress(pid);
+    if(!p){ p = defaultProgress(pid, name); await safeSet('progress:'+pid, JSON.stringify(p), true); await safeSet('roster:'+pid, JSON.stringify({pid, joinedAt:p.joinedAt}), true); }
+    else if(name && !p.name){ p.name = name; }
+    state.pid = pid; state.progress = p;
+    sessionStorage.setItem('pd_pid', pid);
+    await saveProgress();
+    render();
+  };
+  document.getElementById('adminLink').onclick = (e) => { e.preventDefault(); renderAdminLogin(); };
+}
+
+function switchView(v){ state.view = v; render(); }
+
+function render(){
+  const app = document.getElementById('app');
+  const p = state.progress;
+  const pct = pctComplete(p);
+  app.innerHTML = `
+    <header class="top">
+      <div class="brand">
+        <div class="mark">AI</div>
+        <div>
+          <h1>${esc(CONFIG.courseTitle)}</h1>
+          <div class="sub">${pct}% complete</div>
+        </div>
+      </div>
+      <div>
+        <span class="pid-badge">${esc(state.pid)}</span>
+        <button class="btn secondary small" id="signOutBtn" style="margin-left:8px;">Switch code</button>
+      </div>
+    </header>
+    <div class="layout">
+      <nav class="ledger" id="navLedger"></nav>
+      <section class="panel" id="mainPanel"></section>
+    </div>`;
+  document.getElementById('signOutBtn').onclick = () => { sessionStorage.removeItem('pd_pid'); state = {pid:null,progress:null,view:'welcome',isAdmin:false}; renderLanding(); };
+  renderNav();
+  renderMain();
+}
+
+function renderNav(){
+  const nav = document.getElementById('navLedger');
+  const p = state.progress;
+  const items = [
+    {id:'welcome', label:'Welcome & Pre-Survey', done:p.preSurvey},
+    ...CONFIG.modules.map(m => ({id:m.id, label:m.title.replace(/^Module \d+ — /,'M'+m.id.slice(1)+': '), done:p.modules[m.id].submitted})),
+    {id:'completion', label:'Course Completion', done:p.postSurvey}
+  ];
+  nav.innerHTML = items.map(it => `
+    <button class="navitem ${state.view===it.id?'active':''}" data-view="${it.id}">
+      <span class="tick ${it.done?'done':''}">${it.done?'✓':''}</span>
+      <span>${esc(it.label)}</span>
+    </button>`).join('');
+  nav.querySelectorAll('.navitem').forEach(btn => btn.onclick = () => switchView(btn.dataset.view));
+}
+
+function renderMain(){
+  const main = document.getElementById('mainPanel');
+  if(state.view === 'welcome') return renderWelcome(main);
+  if(state.view === 'completion') return renderCompletion(main);
+  const mod = CONFIG.modules.find(m => m.id === state.view);
+  if(mod) return renderModule(main, mod);
+  main.innerHTML = "<p>Not found.</p>";
+}
+
+function renderWelcome(main){
+  const p = state.progress;
+  main.innerHTML = `
+    <div class="eyebrow">Welcome & Pre-Survey</div>
+    <h2>Welcome, ${esc(p.name || state.pid)}</h2>
+    <p>This professional development is designed for K–12 educators to build knowledge and confidence in responsible AI integration. It takes about 4–5 hours across four self-paced modules — come and go as your schedule allows; your place is saved.</p>
+    <ul class="plain">
+      <li>Complete the pre-survey below before starting Module 1.</li>
+      <li>Work through Modules 1–4 in sequence.</li>
+      <li>Each module ends with a short reflection and an artifact you submit.</li>
+      <li>Finish with the post-survey and your certificate of completion.</li>
+    </ul>
+    <div class="card">
+      <div class="label">Step 1 — Pre-survey</div>
+      <p>Complete the pre-survey, then mark it done below.</p>
+      <div class="actions-row">
+        <a class="btn secondary small" href="${esc(CONFIG.preSurveyUrl)}" target="_blank" rel="noopener">Open pre-survey ↗</a>
+        <button class="btn small" id="markPre">${p.preSurvey ? "✓ Marked complete" : "Mark pre-survey complete"}</button>
+      </div>
+      ${CONFIG.preSurveyUrl.startsWith('PASTE_') ? '<div class="config-note">Facilitator: add your real Qualtrics link in the CONFIG block.</div>' : ''}
+    </div>
+    <div class="actions-row"><button class="btn" id="toM1">Start Module 1 →</button></div>
+  `;
+  document.getElementById('markPre').onclick = async () => { state.progress.preSurvey = true; await saveProgress(); render(); toast("Pre-survey marked complete."); };
+  document.getElementById('toM1').onclick = () => switchView('m1');
+}
+
+async function renderModule(main, mod){
+  const idx = CONFIG.modules.findIndex(m=>m.id===mod.id);
+  const mp = state.progress.modules[mod.id];
+  main.innerHTML = `
+    <div class="eyebrow">Module ${idx+1} of ${CONFIG.modules.length}</div>
+    <h2>${esc(mod.title)}</h2>
+    <p><strong>Purpose:</strong> ${esc(mod.purpose)}</p>
+    <div class="card">
+      <div class="label">Welcome video</div>
+      ${mod.videoUrl.startsWith('PASTE_')
+        ? '<div class="config-note">Facilitator: add this module\'s video link in CONFIG.</div>'
+        : `<div class="embed-wrap"><iframe src="${esc(mod.videoUrl)}" allowfullscreen></iframe></div>`}
+    </div>
+    <div class="card">
+      <div class="label">Key topics</div>
+      <ul class="plain">${mod.keyTopics.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>
+    </div>
+    <div class="card">
+      <div class="label">Learning activity</div>
+      <p>${esc(mod.activity)}</p>
+      <label style="font-size:.85em;display:flex;gap:8px;align-items:center;margin-top:8px;">
+        <input type="checkbox" id="actDone" ${mp.activityDone?'checked':''}> I've completed this activity
+      </label>
+    </div>
+    <div class="card">
+      <div class="label">Reflection</div>
+      <p><em>${esc(mod.reflectionPrompt)}</em></p>
+      <textarea id="reflectionInput" placeholder="Write your reflection here — it saves automatically as you go."></textarea>
+    </div>
+    <div class="card">
+      <div class="label">${esc(mod.artifactLabel)}</div>
+      <p>${esc(mod.artifactInstructions)}</p>
+      <textarea id="artifactInput" placeholder="Write or paste your submission for this module here." style="min-height:220px;"></textarea>
+      <div class="actions-row">
+        <span class="status-pill ${mp.submitted?'done':''}" id="savedStatusPill">${mp.submitted ? '✓ Saved & submitted' : 'Not yet saved'}</span>
+        <button class="btn small" id="saveArtifactBtn">Save my work</button>
+        <span id="lastSavedNote" style="font-size:.78em;color:var(--muted)"></span>
+      </div>
+      <p style="font-size:.78em;color:var(--muted);margin-top:8px;">Saving here sends your work straight to your researcher — there's no separate step to turn it in. You can come back and keep editing any time before the course closes.</p>
+    </div>
+    <div class="divider"></div>
+    <div class="card">
+      <div class="label">Discussion — Module ${idx+1}</div>
+      <p style="font-size:.82em;color:var(--muted)">Visible to everyone taking this course. Don't share anything you wouldn't want classmates to see.</p>
+      <div id="discussionThread"></div>
+      <textarea id="discussionInput" placeholder="Share a thought with other participants…" style="margin-top:10px;"></textarea>
+      <div class="actions-row"><button class="btn small" id="postDiscussion">Post</button></div>
+    </div>
+    <div class="actions-row" style="margin-top:20px;">
+      ${idx>0 ? `<button class="btn secondary" id="prevMod">← ${esc(CONFIG.modules[idx-1].title)}</button>` : ''}
+      ${idx < CONFIG.modules.length-1 ? `<button class="btn" id="nextMod">${esc(CONFIG.modules[idx+1].title)} →</button>` : `<button class="btn" id="toCompletion">Go to Course Completion →</button>`}
+    </div>
+  `;
+  document.getElementById('actDone').onchange = async (e) => { mp.activityDone = e.target.checked; await saveProgress(); renderNav(); };
+  if(document.getElementById('prevMod')) document.getElementById('prevMod').onclick = () => switchView(CONFIG.modules[idx-1].id);
+  if(document.getElementById('nextMod')) document.getElementById('nextMod').onclick = () => switchView(CONFIG.modules[idx+1].id);
+  if(document.getElementById('toCompletion')) document.getElementById('toCompletion').onclick = () => switchView('completion');
+  document.getElementById('postDiscussion').onclick = async () => {
+    const txt = document.getElementById('discussionInput').value.trim();
+    if(!txt) return;
+    const postId = Date.now()+"-"+Math.random().toString(36).slice(2,7);
+    await safeSet(`discussion:${mod.id}:${postId}`, JSON.stringify({pid:state.pid, name: state.progress.name || state.pid, text:txt, ts:new Date().toISOString()}), true);
+    document.getElementById('discussionInput').value = '';
+    loadDiscussion(mod.id);
+    toast("Posted.");
+  };
+  loadDiscussion(mod.id);
+
+  // Load any previously saved reflection/artifact text for this participant + module
+  (async () => {
+    const raw = await safeGet(`artifact:${mod.id}:${state.pid}`, true);
+    if(raw){
+      try{
+        const saved = JSON.parse(raw);
+        document.getElementById('reflectionInput').value = saved.reflection || '';
+        document.getElementById('artifactInput').value = saved.artifact || '';
+        if(saved.updatedAt) document.getElementById('lastSavedNote').textContent = 'Last saved ' + new Date(saved.updatedAt).toLocaleString();
+      }catch(e){}
+    }
+  })();
+
+  let saveTimer = null;
+  const doSave = async (silent) => {
+    const reflection = document.getElementById('reflectionInput').value;
+    const artifact = document.getElementById('artifactInput').value;
+    const payload = { pid: state.pid, name: state.progress.name || state.pid, reflection, artifact, updatedAt: new Date().toISOString() };
+    await safeSet(`artifact:${mod.id}:${state.pid}`, JSON.stringify(payload), true);
+    mp.submitted = (reflection.trim().length > 0 || artifact.trim().length > 0);
+    await saveProgress();
+    document.getElementById('lastSavedNote').textContent = 'Last saved ' + new Date(payload.updatedAt).toLocaleString();
+    const pill = document.getElementById('savedStatusPill');
+    if(pill){ pill.textContent = mp.submitted ? '✓ Saved & submitted' : 'Not yet saved'; pill.classList.toggle('done', mp.submitted); }
+    renderNav();
+    if(!silent) toast("Saved.");
+  };
+  document.getElementById('saveArtifactBtn').onclick = () => doSave(false);
+  ['reflectionInput','artifactInput'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => doSave(true), 2000); // autosave 2s after typing stops
+    });
+  });
+}
+
+async function loadDiscussion(moduleId){
+  const el = document.getElementById('discussionThread');
+  if(!el) return;
+  const keys = await safeList(`discussion:${moduleId}:`, true);
+  const posts = [];
+  for(const k of keys){
+    const raw = await safeGet(k, true);
+    if(raw){ try{ posts.push(JSON.parse(raw)); }catch(e){} }
+  }
+  posts.sort((a,b) => new Date(a.ts) - new Date(b.ts));
+  el.innerHTML = posts.length ? posts.map(p => `
+    <div class="discussion-post">
+      <div class="meta">${esc(p.name)} · ${new Date(p.ts).toLocaleString()}</div>
+      <div>${esc(p.text)}</div>
+    </div>`).join('') : '<p style="color:var(--muted);font-size:.85em;">No posts yet — be the first.</p>';
+}
+
+function renderCompletion(main){
+  const p = state.progress;
+  const allModulesDone = CONFIG.modules.every(m => p.modules[m.id].submitted);
+  const allDone = allModulesDone && p.postSurvey;
+  main.innerHTML = `
+    <div class="eyebrow">Course Completion</div>
+    <h2>Wrapping up</h2>
+    <div class="card">
+      <div class="label">Step 1 — Post-survey</div>
+      <div class="actions-row">
+        <a class="btn secondary small" href="${esc(CONFIG.postSurveyUrl)}" target="_blank" rel="noopener">Open post-survey ↗</a>
+        <button class="btn small" id="markPost">${p.postSurvey ? "✓ Marked complete" : "Mark post-survey complete"}</button>
+      </div>
+      ${CONFIG.postSurveyUrl.startsWith('PASTE_') ? '<div class="config-note">Facilitator: add your real Qualtrics link in the CONFIG block.</div>' : ''}
+    </div>
+    <div class="card">
+      <div class="label">Module submissions</div>
+      <ul class="plain">${CONFIG.modules.map(m => `<li>${esc(m.title)}: ${p.modules[m.id].submitted ? '✓ submitted' : 'not yet submitted'}</li>`).join('')}</ul>
+    </div>
+    ${allDone ? `
+      <div class="cert">
+        <div class="eyebrow">Certificate of Completion</div>
+        <div class="title">${esc(CONFIG.courseTitle)}</div>
+        <div class="name">${esc(p.name || state.pid)}</div>
+        <p>has completed all four modules and study surveys — ${esc(String(CONFIG.completionHours))} hours of professional development.</p>
+        <p class="mono" style="font-size:.8em;color:var(--muted)">Participant code ${esc(state.pid)} · ${new Date().toLocaleDateString()}</p>
+      </div>
+      <div class="actions-row center" style="justify-content:center;"><button class="btn" id="printCert">Print / save certificate as PDF</button></div>
+    ` : `<p style="color:var(--muted)">Your certificate will appear here once all modules and the post-survey are marked complete.</p>`}
+  `;
+  document.getElementById('markPost').onclick = async () => { state.progress.postSurvey = true; await saveProgress(); render(); toast("Post-survey marked complete."); };
+  if(document.getElementById('printCert')) document.getElementById('printCert').onclick = () => window.print();
+}
+
+/* ---------- Admin / researcher dashboard ---------- */
+function renderAdminLogin(){
+  const app = document.getElementById('app');
+  app.innerHTML = `
+    <div class="landing">
+      <div class="eyebrow">Researcher Dashboard</div>
+      <h1>Facilitator sign-in</h1>
+      <input type="password" id="adminPw" placeholder="Dashboard password">
+      <div style="margin-top:14px;"><button class="btn" id="adminEnter">Enter</button></div>
+      <p style="margin-top:22px;"><a href="#" id="backToLanding">← Back to participant sign-in</a></p>
+    </div>`;
+  document.getElementById('backToLanding').onclick = (e) => { e.preventDefault(); renderLanding(); };
+  document.getElementById('adminEnter').onclick = async () => {
+    const pw = document.getElementById('adminPw').value;
+    if(pw !== CONFIG.adminPassword){ toast("Incorrect password."); return; }
+    renderAdminDashboard();
+  };
+}
+
+async function renderAdminDashboard(){
+  const app = document.getElementById('app');
+  app.innerHTML = `<div class="loading">Loading roster…</div>`;
+  const rosterKeys = await safeList('progress:', true);
+  const rows = [];
+  for(const k of rosterKeys){
+    const raw = await safeGet(k, true);
+    if(raw){ try{ rows.push(JSON.parse(raw)); }catch(e){} }
+  }
+  rows.sort((a,b) => a.pid.localeCompare(b.pid));
+  app.innerHTML = `
+    <header class="top">
+      <h1>Researcher Dashboard</h1>
+      <button class="btn secondary small" id="adminExit">Exit</button>
+    </header>
+    <section class="panel">
+      <div class="eyebrow">${rows.length} participant${rows.length===1?'':'s'}</div>
+      <div class="actions-row" style="margin-bottom:16px;">
+        <button class="btn small" id="exportCsv">Export progress as CSV</button>
+      </div>
+      <table class="admin">
+        <thead><tr><th>Code</th><th>Name</th><th>Pre</th>
+          ${CONFIG.modules.map(m=>`<th>M${m.id.slice(1)}</th>`).join('')}
+          <th>Post</th><th>% Complete</th><th>Joined</th></tr></thead>
+        <tbody>
+          ${rows.map(p => `<tr>
+            <td class="mono">${esc(p.pid)}</td>
+            <td>${esc(p.name||'—')}</td>
+            <td>${p.preSurvey?'✓':'—'}</td>
+            ${CONFIG.modules.map(m=>`<td>${p.modules[m.id].submitted?'✓':'—'}</td>`).join('')}
+            <td>${p.postSurvey?'✓':'—'}</td>
+            <td>${pctComplete(p)}%</td>
+            <td>${new Date(p.joinedAt).toLocaleDateString()}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+      <p style="font-size:.78em;color:var(--muted);margin-top:18px;">Pre/post survey response text lives in Qualtrics — cross-reference by participant code. Module reflections and scenario work are below.</p>
+    </section>
+
+    <div class="divider"></div>
+
+    <section class="panel">
+      <div class="eyebrow">Reflections & scenario submissions (all modules)</div>
+      <div class="actions-row" style="margin-bottom:16px;">
+        <button class="btn small" id="loadArtifactsAdmin">Load all submissions</button>
+        <button class="btn small secondary" id="exportArtifactsCsv" disabled>Export submissions as CSV</button>
+      </div>
+      <div id="artifactsAdminArea" style="font-size:.85em;color:var(--muted);">Click "Load all submissions" to fetch saved reflections and scenario work from storage.</div>
+    </section>
+
+    <div class="divider"></div>
+
+    <section class="panel">
+      <div class="eyebrow">Discussion posts (all modules)</div>
+      <div class="actions-row" style="margin-bottom:16px;">
+        <button class="btn small" id="loadDiscussionAdmin">Load all discussion posts</button>
+        <button class="btn small secondary" id="exportDiscussionCsv" disabled>Export discussion as CSV</button>
+      </div>
+      <div id="discussionAdminArea" style="font-size:.85em;color:var(--muted);">Click "Load all discussion posts" to fetch them from storage.</div>
+    </section>
+  `;
+  document.getElementById('adminExit').onclick = () => renderLanding();
+  document.getElementById('exportCsv').onclick = () => {
+    const headers = ['pid','name','preSurvey', ...CONFIG.modules.map(m=>m.id+'_submitted'), 'postSurvey','pctComplete','joinedAt'];
+    const lines = [headers.join(',')];
+    rows.forEach(p => {
+      const line = [p.pid, p.name||'', p.preSurvey, ...CONFIG.modules.map(m=>p.modules[m.id].submitted), p.postSurvey, pctComplete(p), p.joinedAt];
+      lines.push(line.map(v => `"${String(v).replace(/"/g,'""')}"`).join(','));
+    });
+    const blob = new Blob([lines.join('\n')], {type:'text/csv'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'pd_progress_export.csv'; a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  let allArtifacts = [];
+  document.getElementById('loadArtifactsAdmin').onclick = async () => {
+    const area = document.getElementById('artifactsAdminArea');
+    area.textContent = "Loading…";
+    allArtifacts = [];
+    for(const mod of CONFIG.modules){
+      const keys = await safeList(`artifact:${mod.id}:`, true);
+      for(const k of keys){
+        const raw = await safeGet(k, true);
+        if(raw){ try{ allArtifacts.push({module: mod.title, ...JSON.parse(raw)}); }catch(e){} }
+      }
+    }
+    allArtifacts.sort((a,b) => (a.module+a.pid).localeCompare(b.module+b.pid));
+    if(!allArtifacts.length){
+      area.innerHTML = '<p>No submissions saved yet.</p>';
+    } else {
+      area.innerHTML = allArtifacts.map(a => `
+        <div class="card">
+          <div class="label">${esc(a.module)} — ${esc(a.pid)} (${esc(a.name||'')})</div>
+          <p style="font-size:.8em;color:var(--muted)">Last saved ${a.updatedAt ? new Date(a.updatedAt).toLocaleString() : '—'}</p>
+          <p><strong>Reflection:</strong><br>${esc(a.reflection || '(blank)')}</p>
+          <p><strong>${esc((CONFIG.modules.find(m=>m.title===a.module)||{}).artifactLabel || 'Submission')}:</strong><br>${esc(a.artifact || '(blank)')}</p>
+        </div>`).join('');
+    }
+    document.getElementById('exportArtifactsCsv').disabled = allArtifacts.length === 0;
+  };
+  document.getElementById('exportArtifactsCsv').onclick = () => {
+    const headers = ['module','pid','name','reflection','submission','updatedAt'];
+    const lines = [headers.join(',')];
+    allArtifacts.forEach(a => {
+      lines.push([a.module, a.pid, a.name||'', a.reflection||'', a.artifact||'', a.updatedAt||''].map(v => `"${String(v).replace(/"/g,'""')}"`).join(','));
+    });
+    const blob = new Blob([lines.join('\n')], {type:'text/csv'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'pd_submissions_export.csv'; a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  let allDiscussionPosts = [];
+  document.getElementById('loadDiscussionAdmin').onclick = async () => {
+    const area = document.getElementById('discussionAdminArea');
+    area.textContent = "Loading…";
+    allDiscussionPosts = [];
+    for(const mod of CONFIG.modules){
+      const keys = await safeList(`discussion:${mod.id}:`, true);
+      for(const k of keys){
+        const raw = await safeGet(k, true);
+        if(raw){ try{ allDiscussionPosts.push({module: mod.title, ...JSON.parse(raw)}); }catch(e){} }
+      }
+    }
+    allDiscussionPosts.sort((a,b) => new Date(a.ts) - new Date(b.ts));
+    if(!allDiscussionPosts.length){
+      area.innerHTML = '<p>No discussion posts yet.</p>';
+    } else {
+      area.innerHTML = `<table class="admin"><thead><tr><th>Module</th><th>Code</th><th>Name</th><th>Time</th><th>Post</th></tr></thead><tbody>
+        ${allDiscussionPosts.map(p => `<tr><td>${esc(p.module)}</td><td class="mono">${esc(p.pid)}</td><td>${esc(p.name)}</td><td>${new Date(p.ts).toLocaleString()}</td><td>${esc(p.text)}</td></tr>`).join('')}
+      </tbody></table>`;
+    }
+    document.getElementById('exportDiscussionCsv').disabled = allDiscussionPosts.length === 0;
+  };
+  document.getElementById('exportDiscussionCsv').onclick = () => {
+    const headers = ['module','pid','name','timestamp','post'];
+    const lines = [headers.join(',')];
+    allDiscussionPosts.forEach(p => {
+      lines.push([p.module, p.pid, p.name, p.ts, p.text].map(v => `"${String(v).replace(/"/g,'""')}"`).join(','));
+    });
+    const blob = new Blob([lines.join('\n')], {type:'text/csv'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'pd_discussion_export.csv'; a.click();
+    URL.revokeObjectURL(url);
+  };
+}
+
+boot();
+</script>
+</body>
+</html>
