@@ -130,7 +130,10 @@
      study surveys only — module reflections and scenario work are
      captured directly on this site, saved automatically, and viewable
      in the researcher dashboard).
-   - videoUrl per module: link to that module's welcome video.
+   - videoFile per module: path to that module's welcome video file,
+     e.g. "videos/module1.mp4". Upload the actual .mp4 files into a
+     "videos" folder alongside index.html in your GitHub repo — same
+     folder-path trick as the netlify/functions folder.
    - adminPassword: a simple gate for the facilitator dashboard. This is
      NOT strong security — anyone who reads the page source can see it.
      Treat it as a "keep casual visitors out" latch, not a real credential.
@@ -142,14 +145,16 @@ const IMG_SAMR_VISUAL = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCE
 const CONFIG = {
   courseTitle: "Responsible AI Integration for K–12 Educators",
   completionHours: 6,
+  welcomeVideoFile: "videos/welcome.mp4",
+  closingVideoFile: "videos/closing.mp4",
   preSurveyUrl: "https://unt.az1.qualtrics.com/jfe/form/SV_3Fc1hJqOXjjAXhs",
   postSurveyUrl: "https://unt.az1.qualtrics.com/jfe/form/SV_5gQhpmP46InOrCm",
-  adminPassword: "@UNT2027",
+  adminPassword: "changeme123",
   modules: [
     {
       id: "m1",
       title: "Module 1 — Foundations of AI in Education",
-      videoUrl: "PASTE_MODULE1_VIDEO_URL_HERE",
+      videoFile: "videos/module1.mp4",
       activity: "Applying SAMR + IDEA to a Classroom Scenario",
       welcomeText: "In this module, you'll begin exploring how to think about AI tools not just as \u201chelpful\u201d or \u201cefficient,\u201d but as instructional decisions that impact student thinking, equity, and learning outcomes.\n\nWe'll use two key frameworks throughout this course:\n\u2022 The SAMR model (to evaluate how technology shapes learning tasks)\n\u2022 The IDEA Framework (to examine equity, bias, and ethical use)\n\nBy the end of this module, you'll begin applying both frameworks to real classroom scenarios.\n\nTake your time working through each part. You'll see a mix of short content, guided thinking, and reflection to support your learning.",
       learningObjectives: [
@@ -210,7 +215,7 @@ const CONFIG = {
     {
       id: "m2",
       title: "Module 2 — Inclusive Design & Digital Equity",
-      videoUrl: "PASTE_MODULE2_VIDEO_URL_HERE",
+      videoFile: "videos/module2.mp4",
       activity: "Scenario Analysis Submission",
       activityCriteria: [
         "Accurate application of SAMR",
@@ -292,7 +297,7 @@ const CONFIG = {
     {
       id: "m3",
       title: "Module 3 — Context, Trade-Offs, and Instructional Decision-Making",
-      videoUrl: "PASTE_MODULE3_VIDEO_URL_HERE",
+      videoFile: "videos/module3.mp4",
       activity: "Applying Your Redesign to New Contexts",
       activityCriteria: [
         "Careful comparison across different instructional contexts",
@@ -372,7 +377,7 @@ const CONFIG = {
     {
       id: "m4",
       title: "Module 4 — Final Lesson Design + Justification",
-      videoUrl: "PASTE_MODULE4_VIDEO_URL_HERE",
+      videoFile: "videos/module4.mp4",
       activity: "Final Lesson Design + Justification",
       activityCriteria: [
         "A complete lesson or activity plan",
@@ -628,6 +633,12 @@ function renderWelcome(main){
     <div class="eyebrow">Welcome & Pre-Survey</div>
     <h2>Welcome, ${esc(p.name || state.pid)}</h2>
     <p>This professional development is designed for K–12 educators to build knowledge and confidence in responsible AI integration. It takes about 4–5 hours across four self-paced modules — come and go as your schedule allows; your place is saved.</p>
+    <div class="card">
+      <div class="label">Welcome video</div>
+      ${CONFIG.welcomeVideoFile.startsWith('PASTE_')
+        ? '<div class="config-note">Facilitator: add the welcome video file path in CONFIG, and upload the .mp4 to a "videos" folder in the repo.</div>'
+        : `<div class="embed-wrap"><video controls preload="metadata" style="width:100%;display:block;"><source src="${esc(CONFIG.welcomeVideoFile)}" type="video/mp4">Your browser doesn't support embedded video — <a href="${esc(CONFIG.welcomeVideoFile)}">download it here</a> instead.</video></div>`}
+    </div>
     <ul class="plain">
       <li>Complete the pre-survey below before starting Module 1.</li>
       <li>Work through Modules 1–4 in sequence.</li>
@@ -661,9 +672,9 @@ async function renderModule(main, mod){
     <p><strong>Purpose:</strong> ${esc(mod.purpose)}</p>
     <div class="card">
       <div class="label">Welcome video</div>
-      ${mod.videoUrl.startsWith('PASTE_')
-        ? '<div class="config-note">Facilitator: add this module\'s video link in CONFIG.</div>'
-        : `<div class="embed-wrap"><iframe src="${esc(mod.videoUrl)}" allowfullscreen></iframe></div>`}
+      ${mod.videoFile.startsWith('PASTE_')
+        ? '<div class="config-note">Facilitator: add this module\'s video file path in CONFIG, and upload the .mp4 to a "videos" folder in the repo.</div>'
+        : `<div class="embed-wrap"><video controls preload="metadata" style="width:100%;display:block;"><source src="${esc(mod.videoFile)}" type="video/mp4">Your browser doesn't support embedded video — <a href="${esc(mod.videoFile)}">download it here</a> instead.</video></div>`}
     </div>
     <div class="card">
       <div class="label">Key topics</div>
@@ -811,9 +822,9 @@ async function renderStructuredModule(main, mod, idx, mp){
 
     <div class="card">
       <div class="label">Welcome video</div>
-      ${mod.videoUrl.startsWith('PASTE_')
-        ? '<div class="config-note">Facilitator: add this module\'s video link in CONFIG.</div>'
-        : `<div class="embed-wrap"><iframe src="${esc(mod.videoUrl)}" allowfullscreen></iframe></div>`}
+      ${mod.videoFile.startsWith('PASTE_')
+        ? '<div class="config-note">Facilitator: add this module\'s video file path in CONFIG, and upload the .mp4 to a "videos" folder in the repo.</div>'
+        : `<div class="embed-wrap"><video controls preload="metadata" style="width:100%;display:block;"><source src="${esc(mod.videoFile)}" type="video/mp4">Your browser doesn't support embedded video — <a href="${esc(mod.videoFile)}">download it here</a> instead.</video></div>`}
     </div>
 
     ${mod.materials && mod.materials.length ? `
@@ -985,6 +996,12 @@ function renderCompletion(main){
     <div class="card">
       <div class="label">Module submissions</div>
       <ul class="plain">${CONFIG.modules.map(m => `<li>${esc(m.title)}: ${p.modules[m.id].submitted ? '✓ submitted' : 'not yet submitted'}</li>`).join('')}</ul>
+    </div>
+    <div class="card">
+      <div class="label">Closing video</div>
+      ${CONFIG.closingVideoFile.startsWith('PASTE_')
+        ? '<div class="config-note">Facilitator: add the closing video file path in CONFIG, and upload the .mp4 to a "videos" folder in the repo.</div>'
+        : `<div class="embed-wrap"><video controls preload="metadata" style="width:100%;display:block;"><source src="${esc(CONFIG.closingVideoFile)}" type="video/mp4">Your browser doesn't support embedded video — <a href="${esc(CONFIG.closingVideoFile)}">download it here</a> instead.</video></div>`}
     </div>
     ${allDone ? `
       <div class="cert">
