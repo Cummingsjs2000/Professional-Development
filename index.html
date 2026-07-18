@@ -545,6 +545,7 @@ function renderLanding(){
     <div class="landing">
       <div class="eyebrow">Participant Sign-In</div>
       <h1>${esc(CONFIG.courseTitle)}</h1>
+      <p style="font-size:.78em;color:var(--muted);margin-top:6px;">This site works on phones and tablets, but you may find it easier to use on a desktop or laptop, especially for the longer written responses.</p>
       <p style="color:var(--muted);white-space:pre-line">Please create a unique 4-character code using:
 • First letter of your mother's first name
 • Last two digits of your birth year
@@ -556,8 +557,6 @@ Use the same code every time you return — it's how the course finds your saved
       <input type="text" id="nameInput" placeholder="Display name for discussion posts (optional)">
       <p style="font-size:.78em;color:var(--muted);margin-top:2px;">Your name is optional — but if you'd like your certificate of completion to show your name, enter it here.</p>
       <div style="margin-top:16px;"><button class="btn" id="enterBtn">Enter course</button></div> 
-      <p style="font-size:.78em;color:var(--muted);margin-top:14px;">This site works on phones and tablets, but you may find it easier to use on a desktop or laptop, especially for the longer written responses.</p>
-      </div>
       <p style="margin-top:26px;font-size:.8em;color:var(--muted)">Facilitator? <a href="#" id="adminLink">Open the researcher dashboard</a> instead.</p>
     </div>`;
   document.getElementById('enterBtn').onclick = async () => {
