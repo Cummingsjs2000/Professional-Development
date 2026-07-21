@@ -145,6 +145,10 @@ const IMG_SAMR_VISUAL = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCE
 const CONFIG = {
   courseTitle: "Responsible AI Integration for K–12 Educators",
   completionHours: 6,
+  previousResearch: [
+    { title: "From Enhancement to Transformation: Instructional Design Implications of AI Tool Affordances Through a SAMR Lens in K-12 Education", file: "research1.pdf" },
+    { title: "AI and Equity in K-12 Education: An Integrative Analysis Advancing Inclusive and Accountable Design", file: "research2.pdf" }
+  ],
   welcomeVideoFile: "welcome.mp4",
   closingVideoFile: "closing.mp4",
   preSurveyUrl: "https://unt.az1.qualtrics.com/jfe/form/SV_3Fc1hJqOXjjAXhs",
@@ -545,18 +549,17 @@ function renderLanding(){
     <div class="landing">
       <div class="eyebrow">Participant Sign-In</div>
       <h1>${esc(CONFIG.courseTitle)}</h1>
-      <p style="font-size:.78em;color:var(--muted);margin-top:6px;">This site works on phones and tablets, but you may find it easier to use on a desktop or laptop, especially for the longer written responses.</p>
       <p style="color:var(--muted);white-space:pre-line">Please create a unique 4-character code using:
 • First letter of your mother's first name
 • Last two digits of your birth year
 • First letter of your birthplace
 Example: M87T
 
-Use the same code every time you return; it's how the course finds your saved progress.</p>
+Use the same code every time you return — it's how the course finds your saved progress.</p>
       <input type="text" id="pidInput" class="mono" placeholder="e.g. M87T" autocomplete="off" maxlength="4">
       <input type="text" id="nameInput" placeholder="Display name for discussion posts (optional)">
-      <p style="font-size:.78em;color:var(--muted);margin-top:2px;">Your name is optional, but if you'd like your certificate of completion to show your name, enter it here.</p>
-      <div style="margin-top:16px;"><button class="btn" id="enterBtn">Enter course</button></div> 
+      <p style="font-size:.78em;color:var(--muted);margin-top:2px;">Your name is optional — but if you'd like your certificate of completion to show your name, enter it here.</p>
+      <div style="margin-top:16px;"><button class="btn" id="enterBtn">Enter course</button></div>
       <p style="margin-top:26px;font-size:.8em;color:var(--muted)">Facilitator? <a href="#" id="adminLink">Open the researcher dashboard</a> instead.</p>
     </div>`;
   document.getElementById('enterBtn').onclick = async () => {
@@ -639,6 +642,13 @@ function renderWelcome(main){
       ${CONFIG.welcomeVideoFile.startsWith('PASTE_')
         ? '<div class="config-note">Facilitator: add the welcome video file path in CONFIG, and upload the .mp4 to a "videos" folder in the repo.</div>'
         : `<div class="embed-wrap"><video controls preload="metadata" style="width:100%;display:block;"><source src="${esc(CONFIG.welcomeVideoFile)}" type="video/mp4">Your browser doesn't support embedded video — <a href="${esc(CONFIG.welcomeVideoFile)}">download it here</a> instead.</video></div>`}
+    </div>
+    <div class="card">
+      <div class="label">Previous research</div>
+      <p style="font-size:.85em;color:var(--muted);margin-bottom:8px;">Two published studies on AI in K-12 education that inform this course, available for your reference.</p>
+      <ul class="plain">
+        ${CONFIG.previousResearch.map(r => `<li><a href="${esc(r.file)}" target="_blank" rel="noopener">${esc(r.title)} ↗</a></li>`).join('')}
+      </ul>
     </div>
     <ul class="plain">
       <li>Complete the pre-survey below before starting Module 1.</li>
